@@ -1,5 +1,13 @@
 package com.edsonbaierle.loginapi.models;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.edsonbaierle.loginapi.enums.RoleEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,11 +15,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "User")
-public class User {
-  
+public class User implements UserDetails {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", unique = true)
@@ -26,9 +40,7 @@ public class User {
   @Column(name = "password", nullable = false, length = 100, unique = false)
   private String password;
 
-
-  public User() {
-  }
+  private RoleEnum role;
 
   public User(String name, String email, String password) {
     this.name = name;
@@ -36,36 +48,47 @@ public class User {
     this.password = password;
   }
 
-  public Long getId() {
-    return this.id;
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    if(this.role == RoleEnum.ADMIN){
+      return List.of(
+        new SimpleGrantedAuthority("ROLE_ADMIN"),
+        new SimpleGrantedAuthority("ROLE_USER")
+      );
+    }
+    return List.of(
+      new SimpleGrantedAuthority("ROLE_USER")
+    );
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return this.name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getEmail() {
+  @Override
+  public String getUsername() {
     return this.email;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
+  @Override
   public String getPassword() {
     return this.password;
   }
 
-  public void setPassword(String password) {
-    this.password = password;
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
 
 }
