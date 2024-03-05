@@ -4,6 +4,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.edsonbaierle.loginapi.dtos.AuthDto;
 
-public interface AuthenticationService extends UserDetailsService{
+public interface AuthenticationService extends UserDetailsService {
   public String GetToken(AuthDto authDto);
+
+  public String validateTokenJwt(String token);
 }

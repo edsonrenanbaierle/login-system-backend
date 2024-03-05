@@ -22,10 +22,10 @@ public class UserServiceImpl implements UserService{
   public UserDto saveUser(UserDto UserDto) {
     var passwordHash = passwordEncoder.encode(UserDto.password());
 
-    User entity = new User(UserDto.name(), UserDto.email(), passwordHash);
+    User entity = new User(UserDto.name(), UserDto.email(), passwordHash, UserDto.role());
     User newUser = UserRepository.save(entity);
 
-    return new UserDto(newUser.getName(), newUser.getEmail(), newUser.getPassword());
+    return new UserDto(newUser.getName(), newUser.getEmail(), newUser.getPassword(), newUser.getRole());
   }
 
 }

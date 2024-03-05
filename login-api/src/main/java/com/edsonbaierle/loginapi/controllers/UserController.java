@@ -22,8 +22,14 @@ public class UserController {
     return UserService.saveUser(UserDto);
   }
 
-  @GetMapping
-  private String saverOk(){
-    return "ok";
+  @GetMapping("/admin")
+  private String getAdmin(){
+    return "Permissão de ADM";
   }
+
+  @GetMapping("/user")
+  private String getUser(){
+    return "Permissão de usuario";
+  }
+
 }

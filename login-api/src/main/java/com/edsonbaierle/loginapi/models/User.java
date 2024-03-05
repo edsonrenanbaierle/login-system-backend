@@ -40,12 +40,14 @@ public class User implements UserDetails {
   @Column(name = "password", nullable = false, length = 100, unique = false)
   private String password;
 
+  @Column(nullable = false)
   private RoleEnum role;
 
-  public User(String name, String email, String password) {
+  public User(String name, String email, String password, RoleEnum role) {
     this.name = name;
     this.email = email;
     this.password = password;
+    this.role = role;
   }
 
   @Override
