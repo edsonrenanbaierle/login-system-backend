@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edsonbaierle.loginapi.dtos.AuthDto;
+import com.edsonbaierle.loginapi.services.AuthenticationService;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,12 +20,15 @@ public class AuthenticationController {
   @Autowired
   private AuthenticationManager authenticationManager;
 
+  @Autowired
+  private AuthenticationService authenticationService;
+
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
   public String auth(@RequestBody AuthDto AuthDto) {
     var UserAuthenticationToken = new UsernamePasswordAuthenticationToken(AuthDto.email(), AuthDto.password());
     authenticationManager.authenticate(UserAuthenticationToken);
 
-    return "token...";
+    return authenticationService.GetToken(AuthDto);
   }
 }
