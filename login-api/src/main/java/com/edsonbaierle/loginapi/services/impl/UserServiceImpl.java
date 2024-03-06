@@ -9,23 +9,32 @@ import com.edsonbaierle.loginapi.models.User;
 import com.edsonbaierle.loginapi.repositores.UserRepository;
 import com.edsonbaierle.loginapi.services.UserService;
 
+import infra.exeptions.ProductNotFoundException;
+
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository UserRepository;
 
-  @Autowired
-  private UserRepository UserRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-  @Override
-  public UserDto saveUser(UserDto UserDto) {
-    var passwordHash = passwordEncoder.encode(UserDto.password());
+    @Override
+    public UserDto saveUser(UserDto UserDto) {
 
-    User entity = new User(UserDto.name(), UserDto.email(), passwordHash, UserDto.role());
-    User newUser = UserRepository.save(entity);
+        User UserJaExiste = UserRepository.findByEmail(UserDto.email());
 
-    return new UserDto(newUser.getName(), newUser.getEmail(), newUser.getPassword(), newUser.getRole());
-  }
+        if (UserJaExiste != null) {
+            throw new ProductNotFoundException(UserJaExiste.getName());
+        }
 
+        var passwordHash = passwordEncoder.encode(UserDto.password());
+
+        User entity = new User(UserDto.name(), UserDto.email(), passwordHash, UserDto.role());
+
+        User novoUser = UserRepository.save(entity);
+
+        return new UserDto(novoUser.getName(), novoUser.getEmail(), novoUser.getPassword(), novoUser.getRole());
+    }
 }
