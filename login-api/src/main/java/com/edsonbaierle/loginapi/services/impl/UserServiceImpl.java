@@ -5,11 +5,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.edsonbaierle.loginapi.dtos.UserDto;
+import com.edsonbaierle.loginapi.infra.exeptions.UserFoundException;
 import com.edsonbaierle.loginapi.models.User;
 import com.edsonbaierle.loginapi.repositores.UserRepository;
 import com.edsonbaierle.loginapi.services.UserService;
-
-import infra.exeptions.ProductNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,7 +25,7 @@ public class UserServiceImpl implements UserService {
         User UserJaExiste = UserRepository.findByEmail(UserDto.email());
 
         if (UserJaExiste != null) {
-            throw new ProductNotFoundException(UserJaExiste.getName());
+            throw new UserFoundException();
         }
 
         var passwordHash = passwordEncoder.encode(UserDto.password());
