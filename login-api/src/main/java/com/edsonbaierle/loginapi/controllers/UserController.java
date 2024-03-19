@@ -15,9 +15,10 @@ import com.edsonbaierle.loginapi.services.UserService;
 @RequestMapping("/user")
 public class UserController {
 
+
   @Autowired
   private UserService UserService;
-
+  
   @PostMapping
   private UserDto saveUser(@RequestBody UserDto UserDto){
     return UserService.saveUser(UserDto);
